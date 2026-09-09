@@ -37,9 +37,6 @@ ENV BUILD_STANDALONE=true
 # Disable Next.js telemetry inside CI / Docker
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Generate Prisma client before building (safe no-op if no schema)
-RUN npx prisma generate 2>/dev/null || true
-
 RUN npm run build
 
 # =============================================================================
@@ -68,9 +65,6 @@ RUN chown nextjs:nodejs .next
 # Automatically leverage output traces to reduce image size
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-# Copy Prisma schema if present (needed at runtime)
-COPY --from=builder --chown=nextjs:nodejs /app/pris[m]a ./prisma
 
 USER nextjs
 
