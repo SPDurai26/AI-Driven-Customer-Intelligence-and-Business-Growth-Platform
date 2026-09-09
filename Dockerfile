@@ -9,12 +9,12 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Copy only the lockfile and package manifest first (better layer caching)
-COPY app/package.json app/package-lock.json* ./
+COPY package.json package-lock.json* ./
 
 RUN npm ci
 
 # =============================================================================
-# Stage 2 � builder: compile the Next.js application
+# Stage 2 — builder: compile the Next.js application
 # =============================================================================
 FROM node:20-alpine AS builder
 
@@ -25,8 +25,8 @@ WORKDIR /app
 # Bring in node_modules from the deps stage
 COPY --from=deps /app/node_modules ./node_modules
 
-# Copy the full app source (from the nested app/ directory)
-COPY app/ .
+# Copy the full source
+COPY . .
 
 # Build-time env vars required by Next.js during `next build`
 # These are NOT secret - they bake into the static bundle.
@@ -42,7 +42,7 @@ RUN npx prisma generate 2>/dev/null || true
 RUN npm run build
 
 # =============================================================================
-# Stage 3 � runner: lean production image
+# Stage 3 — runner: lean production image
 # =============================================================================
 FROM node:20-alpine AS runner
 
