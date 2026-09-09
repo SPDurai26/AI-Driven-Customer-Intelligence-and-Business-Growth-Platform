@@ -13,10 +13,10 @@ services:
     ports:
       - "${PORT:-3000}:3000"
     environment:
-      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:?NEXTAUTH_SECRET is required}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-bizai-demo-secret-key-2024}
       NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3000}
       AUTH_TRUST_HOST: "true"
-      GROQ_API_KEY: ${GROQ_API_KEY:?GROQ_API_KEY is required}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
       NODE_ENV: production
       PORT: 3000
       HOSTNAME: "0.0.0.0"
@@ -41,18 +41,18 @@ services:
     ports:
       - "${PORT:-3000}:3000"
     volumes:
-      - ./app/src:/app/src
-      - ./app/public:/app/public
-      - ./app/next.config.ts:/app/next.config.ts
-      - ./app/tsconfig.json:/app/tsconfig.json
-      - ./app/postcss.config.mjs:/app/postcss.config.mjs
-      - ./app/eslint.config.mjs:/app/eslint.config.mjs
+      - ./src:/app/src
+      - ./public:/app/public
+      - ./next.config.ts:/app/next.config.ts
+      - ./tsconfig.json:/app/tsconfig.json
+      - ./postcss.config.mjs:/app/postcss.config.mjs
+      - ./eslint.config.mjs:/app/eslint.config.mjs
       - nextjs_dev_cache:/app/.next
     environment:
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-bizai-demo-secret-key-2024}
       NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3000}
       AUTH_TRUST_HOST: "true"
-      GROQ_API_KEY: ${GROQ_API_KEY:?GROQ_API_KEY is required}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
       NODE_ENV: development
       PORT: 3000
       HOSTNAME: "0.0.0.0"

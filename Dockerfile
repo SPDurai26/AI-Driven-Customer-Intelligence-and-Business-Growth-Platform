@@ -32,6 +32,7 @@ COPY . .
 # These are NOT secret - they bake into the static bundle.
 ARG NEXTAUTH_URL=http://localhost:3000
 ENV NEXTAUTH_URL=${NEXTAUTH_URL}
+ENV BUILD_STANDALONE=true
 
 # Disable Next.js telemetry inside CI / Docker
 ENV NEXT_TELEMETRY_DISABLED=1

@@ -142,7 +142,7 @@ export async function POST(req: NextRequest) {
 You are now generating a professional business document. Format it in clean markdown with clear sections, headers, bullet points, and tables where appropriate. Ground all numbers in the financial data provided above. Be thorough, professional, and investment-grade.`;
 
         const groqStream = await client.chat.completions.create({
-          model: 'openai/gpt-oss-120b',
+          model: 'llama-3.3-70b-versatile',
           stream: true,
           messages: [
             { role: 'system', content: docSystem },
@@ -184,7 +184,7 @@ You are now validating a business idea or expansion initiative. Provide a struct
 Be specific, data-driven, and grounded in the provided financial context. Format in clean markdown.`;
 
         const groqStream = await client.chat.completions.create({
-          model: 'openai/gpt-oss-120b',
+          model: 'llama-3.3-70b-versatile',
           stream: true,
           messages: [
             { role: 'system', content: ideaSystem },
@@ -225,7 +225,7 @@ Be specific, data-driven, and grounded in the provided financial context. Format
         let sawContent = false;
 
         const groqStream = await client.chat.completions.create({
-          model: 'openai/gpt-oss-120b',
+          model: 'llama-3.3-70b-versatile',
           stream: true,
           messages,
           max_tokens: 1024,
