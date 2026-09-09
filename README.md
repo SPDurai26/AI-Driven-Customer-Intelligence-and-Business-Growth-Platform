@@ -53,8 +53,8 @@ A full-stack, enterprise-grade financial intelligence, customer analytics, and A
 ### 2. Local Setup
 ```bash
 # Clone repository
-git clone https://github.com/SPDurai26/<YOUR-REPO-NAME>.git
-cd <YOUR-REPO-NAME>
+git clone https://github.com/SPDurai26/AI-Driven-Customer-Intelligence-and-Business-Growth-Platform.git
+cd AI-Driven-Customer-Intelligence-and-Business-Growth-Platform
 
 # Configure environment
 cp .env.example .env
