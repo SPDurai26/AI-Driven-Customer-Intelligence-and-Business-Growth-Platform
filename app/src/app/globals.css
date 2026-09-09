@@ -1,0 +1,523 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+:root {
+  /* ── Cyber HUD Void & Surface Palette (from ui design.txt & ref images) ── */
+  --bg-void: #000003;
+  --bg-base: #020308;
+  --bg-surface: #060913;
+  --bg-elevated: #0B1020;
+  --bg-card: #080D1A;
+  --bg-card-hover: #0E1528;
+  --bg-hud-panel: rgba(8, 13, 26, 0.85);
+
+  /* ── Cyber Neon Accents ── */
+  --cyber-red: #FF2E63;
+  --cyber-crimson: #E50914;
+  --cyber-pink: #FF007F;
+  --cyber-cyan: #00F0FF;
+  --cyber-teal: #00E5FF;
+  --cyber-emerald: #00FF88;
+  --cyber-gold: #FFB800;
+  --cyber-violet: #9945FF;
+  --cyber-purple: #8B5CF6;
+
+  /* ── Borders & HUD Lines ── */
+  --border-hud: rgba(255, 46, 99, 0.35);
+  --border-cyan: rgba(0, 240, 255, 0.35);
+  --border-emerald: rgba(0, 255, 136, 0.35);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-default: rgba(255, 255, 255, 0.12);
+  --border-focus: #00F0FF;
+
+  /* ── Typography Colors ── */
+  --text-primary: #FFFFFF;
+  --text-secondary: #CBD5E1;
+  --text-muted: #64748B;
+  --text-cyber-red: #FF2E63;
+  --text-cyber-cyan: #00F0FF;
+  --text-cyber-emerald: #00FF88;
+  --text-cyber-gold: #FFB800;
+
+  /* ── HUD Glows & Shadows ── */
+  --glow-red: 0 0 20px rgba(255, 46, 99, 0.35), 0 0 40px rgba(255, 46, 99, 0.15);
+  --glow-cyan: 0 0 20px rgba(0, 240, 255, 0.35), 0 0 40px rgba(0, 240, 255, 0.15);
+  --glow-emerald: 0 0 20px rgba(0, 255, 136, 0.35), 0 0 40px rgba(0, 255, 136, 0.15);
+  --glow-violet: 0 0 20px rgba(153, 69, 255, 0.35), 0 0 40px rgba(153, 69, 255, 0.15);
+  --shadow-card: 0 0 0 1px rgba(255, 46, 99, 0.2), 0 8px 32px rgba(0, 0, 0, 0.8);
+  --shadow-hud: 0 4px 24px rgba(0, 0, 0, 0.9);
+
+  /* ── Cyber Gradients ── */
+  --gradient-cyber-red: linear-gradient(135deg, #FF2E63 0%, #FF007F 100%);
+  --gradient-cyber-cyan: linear-gradient(135deg, #00F0FF 0%, #0077FE 100%);
+  --gradient-cyber-emerald: linear-gradient(135deg, #00FF88 0%, #00B368 100%);
+  --gradient-cyber-violet: linear-gradient(135deg, #9945FF 0%, #00F0FF 100%);
+  --gradient-hud-header: linear-gradient(135deg, rgba(255, 46, 99, 0.12) 0%, rgba(0, 240, 255, 0.06) 100%);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  height: 100%;
+}
+
+body {
+  background-color: var(--bg-void);
+  color: var(--text-primary);
+  font-family: 'Rajdhani', 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  overflow-x: hidden;
+  letter-spacing: 0.02em;
+}
+
+/* ── MAIN APP SHELL LAYOUT ── */
+.main-layout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;  /* Critical: prevents flex children from expanding parent beyond viewport */
+  overflow: hidden;
+  width: 0; /* Forces flex children to respect flex:1 instead of content-sizing */
+}
+
+.page-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-width: 0;
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* All page root divs fill their container and never push layout wider */
+.page-content > * {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow: visible;
+  flex-shrink: 0;
+}
+
+/* ── Subtle Cyber Grid Background ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(0, 240, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.025) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── TYPOGRAPHY HIERARCHY ── */
+h1, h2, h3, h4, .font-orbitron {
+  font-family: 'Orbitron', 'Rajdhani', sans-serif;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.font-rajdhani {
+  font-family: 'Rajdhani', sans-serif;
+  letter-spacing: 0.04em;
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── HUD CORNER BRACKETS ── */
+.hud-corner-box {
+  position: relative;
+  background: var(--bg-hud-panel);
+  border: 1px solid var(--border-hud);
+  backdrop-filter: blur(12px);
+  transition: all 0.2s ease;
+}
+
+.hud-corner-box::before,
+.hud-corner-box::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-color: var(--cyber-red);
+  pointer-events: none;
+}
+
+.hud-corner-box::before {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid var(--cyber-red);
+  border-left: 2px solid var(--cyber-red);
+}
+
+.hud-corner-box::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 2px solid var(--cyber-red);
+  border-right: 2px solid var(--cyber-red);
+}
+
+/* Cyan Corner Variant */
+.hud-corner-cyan {
+  border-color: var(--border-cyan);
+}
+.hud-corner-cyan::before {
+  border-top: 2px solid var(--cyber-cyan);
+  border-left: 2px solid var(--cyber-cyan);
+}
+.hud-corner-cyan::after {
+  border-bottom: 2px solid var(--cyber-cyan);
+  border-right: 2px solid var(--cyber-cyan);
+}
+
+/* ── CARD STYLES ── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid rgba(255, 46, 99, 0.22);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  border-color: rgba(255, 46, 99, 0.45);
+  box-shadow: 0 0 25px rgba(255, 46, 99, 0.15), 0 8px 32px rgba(0, 0, 0, 0.8);
+}
+
+.card-glow {
+  box-shadow: 0 0 25px rgba(255, 46, 99, 0.15), 0 8px 30px rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 46, 99, 0.35);
+}
+
+.card-glow-cyan {
+  box-shadow: 0 0 25px rgba(0, 240, 255, 0.15), 0 8px 30px rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(0, 240, 255, 0.35);
+}
+
+/* ── CYBER BUTTONS (CHAMFERED CORNERS) ── */
+.btn-primary {
+  background: var(--gradient-cyber-red);
+  color: #FFFFFF;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 8px 18px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  clip-path: polygon(8px 0%, 100% 0%, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0% 100%, 0% 8px);
+  box-shadow: 0 0 15px rgba(255, 46, 99, 0.4);
+  transition: all 0.15s ease;
+}
+
+.btn-primary:hover {
+  box-shadow: 0 0 25px rgba(255, 46, 99, 0.7);
+  transform: translateY(-1px);
+}
+
+.btn-cyan {
+  background: var(--gradient-cyber-cyan);
+  color: #000003;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 8px 18px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  clip-path: polygon(8px 0%, 100% 0%, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0% 100%, 0% 8px);
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+  transition: all 0.15s ease;
+}
+
+.btn-cyan:hover {
+  box-shadow: 0 0 25px rgba(0, 240, 255, 0.7);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: rgba(11, 16, 32, 0.8);
+  color: var(--text-primary);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 7px 14px;
+  border: 1px solid var(--border-hud);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.btn-secondary:hover {
+  border-color: var(--cyber-red);
+  background: rgba(255, 46, 99, 0.12);
+  color: #FFFFFF;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.btn-ghost:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* ── CYBER BADGES & STATUS PILLS ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 3px;
+  border: 1px solid transparent;
+}
+
+.badge-legendary {
+  background: rgba(255, 184, 0, 0.15);
+  color: #FFB800;
+  border-color: rgba(255, 184, 0, 0.45);
+  box-shadow: 0 0 10px rgba(255, 184, 0, 0.2);
+}
+
+.badge-epic {
+  background: rgba(255, 46, 99, 0.15);
+  color: #FF2E63;
+  border-color: rgba(255, 46, 99, 0.45);
+  box-shadow: 0 0 10px rgba(255, 46, 99, 0.2);
+}
+
+.badge-rare {
+  background: rgba(0, 240, 255, 0.15);
+  color: #00F0FF;
+  border-color: rgba(0, 240, 255, 0.45);
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+}
+
+.badge-uncommon {
+  background: rgba(0, 255, 136, 0.15);
+  color: #00FF88;
+  border-color: rgba(0, 255, 136, 0.45);
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+}
+
+.badge-success {
+  background: rgba(0, 255, 136, 0.15);
+  color: #00FF88;
+  border-color: rgba(0, 255, 136, 0.4);
+}
+
+.badge-warning {
+  background: rgba(255, 184, 0, 0.15);
+  color: #FFB800;
+  border-color: rgba(255, 184, 0, 0.4);
+}
+
+.badge-danger {
+  background: rgba(255, 46, 99, 0.15);
+  color: #FF2E63;
+  border-color: rgba(255, 46, 99, 0.4);
+}
+
+.badge-info {
+  background: rgba(0, 240, 255, 0.15);
+  color: #00F0FF;
+  border-color: rgba(0, 240, 255, 0.4);
+}
+
+.badge-violet {
+  background: rgba(153, 69, 255, 0.15);
+  color: #B27FFF;
+  border-color: rgba(153, 69, 255, 0.4);
+}
+
+/* ── SIDEBAR HUD NAVIGATION ── */
+.sidebar {
+  width: 260px;
+  min-width: 260px;
+  max-width: 260px;
+  flex-shrink: 0;
+  min-height: 100vh;
+  background: #020308;
+  border-right: 1px solid var(--border-hud);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 50;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.9);
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+  margin-bottom: 2px;
+}
+
+.sidebar-link:hover {
+  color: #FFFFFF;
+  background: rgba(255, 46, 99, 0.08);
+  border-color: rgba(255, 46, 99, 0.25);
+}
+
+.sidebar-link.active {
+  color: #FFFFFF;
+  background: rgba(255, 46, 99, 0.18);
+  border: 1px solid var(--cyber-red);
+  box-shadow: 0 0 15px rgba(255, 46, 99, 0.25);
+  font-weight: 700;
+}
+
+/* ── DATA TABLES ── */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.data-table th {
+  padding: 10px 16px;
+  text-align: left;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  background: rgba(0, 0, 0, 0.5);
+  border-bottom: 1px solid var(--border-hud);
+}
+
+.data-table td {
+  padding: 11px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+}
+
+.data-table tr:hover td {
+  background: rgba(255, 46, 99, 0.04);
+}
+
+/* ── INPUTS & CONTROLS ── */
+.input {
+  width: 100%;
+  background: rgba(6, 9, 19, 0.9);
+  border: 1px solid var(--border-hud);
+  border-radius: 4px;
+  padding: 8px 12px;
+  color: var(--text-primary);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 13px;
+  outline: none;
+  transition: all 0.15s ease;
+}
+
+.input:focus {
+  border-color: var(--cyber-cyan);
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.25);
+}
+
+/* ── CHAT BUBBLES ── */
+.chat-bubble-ai {
+  background: rgba(11, 16, 32, 0.9);
+  border: 1px solid var(--border-cyan);
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: var(--text-primary);
+}
+
+.chat-bubble-user {
+  background: rgba(255, 46, 99, 0.15);
+  border: 1px solid var(--border-hud);
+  box-shadow: 0 0 15px rgba(255, 46, 99, 0.15);
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: var(--text-primary);
+}
+
+/* ── PROGRESS BAR ── */
+.progress-bar {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--gradient-cyber-emerald);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+/* ── SCANLINE OVERLAY (TOGGLEABLE) ── */
+.scanlines {
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.25) 50%
+  ), linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.03),
+    rgba(0, 255, 0, 0.01),
+    rgba(0, 0, 255, 0.03)
+  );
+  background-size: 100% 3px, 3px 100%;
+  pointer-events: none;
+}

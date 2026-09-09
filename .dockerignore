@@ -1,0 +1,35 @@
+# Version control
+.git
+.gitignore
+
+# Dependencies (rebuilt inside Docker)
+app/node_modules
+
+# Next.js build output (rebuilt inside Docker)
+app/.next
+app/out
+
+# Environment files - inject at runtime via docker-compose or -e flags
+app/.env*
+!app/.env.local.example
+
+# Editor / OS artefacts
+.DS_Store
+*.pem
+Thumbs.db
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# TypeScript incremental build cache
+*.tsbuildinfo
+
+# Coverage
+app/coverage
+
+# Docker files themselves (no need to COPY them into the image)
+Dockerfile
+docker-compose.yml
+.dockerignore

@@ -1,0 +1,40 @@
+## On your auth idea — good instinct, with a couple of adjustments
+
+Using your 2 sample datasets as 2 login-gated "accounts" is a smart, right-sized approach for a mini project. You don't need real user registration, OAuth, or a database to demonstrate multi-tenant auth — that would be over-engineering for this scope. A couple of things to get right so it actually holds together:
+
+- **Use next-auth's Credentials provider** with 2 hardcoded logins (e.g. `apex@demo.com` / `bharat@demo.com`), since `next-auth` is already installed but currently unused — this is exactly the use case it's good for.
+- **Map each logged-in user to their dataset** — you already have `DEFAULT_PNL_STATEMENT` (Apex Retail, USD) and `INR_SAMPLE_PNL_STATEMENT` (Bharat Precision Works, INR) sitting in `report-store.ts`. Key them by user email/id instead of always defaulting to the first one.
+- **Be upfront (to yourself and anyone reviewing it)** that this is a demo-auth pattern, not production security — hardcoded credentials, no password hashing/reset flow needed at this scope. That's fine and expected for a mini project, just don't accidentally deploy it as-is for real users' data.
+- **One gap to close:** if User 2 edits their P&L, where does that edit go? Right now everything lives in React state only, so it'd reset on refresh regardless of login. Simplest fix at this scope: store each user's edited data in `localStorage` keyed by their user id — no real DB needed.
+
+So: correct instinct, just wire it through next-auth + per-user data keying rather than a full backend.
+
+---
+
+## Fixes to do
+
+| # | Issue | Where |
+|---|---|---|
+| 1 | ~~AI cofounder never calls real AI, silent fallback, no streaming~~ | **Already fixed** (route.ts, AIChatPanel.tsx, AIPage.tsx) |
+| 2 | `.xlsx`/`.pdf` uploads are read with `readAsText` → garbage data, not real parsing | `ReportSubmissionModal.tsx` |
+| 3 | ~~Unmatched fields silently filled with sample "Apex Retail" defaults, no indication which numbers are real vs. placeholder~~ | **Already fixed** (`pnl-parser.ts`) |
+| 4 | CSV isn't actually parsed as rows/columns, just regex over raw text | `pnl-parser.ts` |
+| 5 | `handleGenerateDocument` produces a hardcoded template, not real AI output | `AIPage.tsx` |
+| 6 | `notificationOpen` state exists with zero UI wired to it — dead feature | `app-context.tsx` / `TopBar.tsx` |
+| 7 | `next-auth` and `@prisma/client` installed, completely unused — about to become relevant for #auth | `package.json` |
+| 8 | `AGENTS.md` contains prompt-injection-style content aimed at coding agents — delete or rewrite it | project root |
+| 9 | `node_modules` + `.next` build cache got zipped into your upload — exclude these next time (huge, unnecessary, and can corrupt native bindings across machines) | zip hygiene |
+
+## New features to add
+
+1. **Auth + per-user datasets** (your idea, refined above) — the most valuable next step since it unlocks the rest
+2. **Persistence** — save each user's data (localStorage is enough at this scale; real DB is a stretch goal, not required)
+3. **Real alerts/notifications** — wire the dead `notificationOpen` state to actual triggers: margin drop, retention drop, low quick ratio
+4. **Real AI-generated documents** — replace the hardcoded template in `handleGenerateDocument` with an actual model call, plus export as PDF/DOCX
+5. **Proper file parsing** — either add real Excel (SheetJS) + PDF text extraction, or narrow the upload `accept=` to just CSV/TXT until those are built
+6. **What-if scenario simulator** — slider-driven recalculation using your existing `financial-engine.ts` (e.g. "what if COGS drops 5%?")
+7. **Historical trend charts** — multi-period time series, not just current-vs-previous
+8. **Achievements/gamification page** — there's already a screenshot for this in `public/`, suggesting it was planned but never built
+9. **Swap AI provider to Groq** (from earlier) — free, fast, OpenAI-compatible, easy drop-in
+
+Want me to start with the auth + per-user dataset implementation, since that's the one everything else builds on top of?
